@@ -1,25 +1,36 @@
 # iTeamManager
-## Descrição
-
+## 1. Resumo
 Esse projeto apresenta a proposta de uma ferramenta de integração entre as matriz curriculares dos discentes e docentes do IFPI. A ferramenta disporá de duas frontes, um sistema de busca para encontrar pessoas com conhecimentos específicos para o seu projeto, e grupos onde os projetos gerados no sistema possam ser discutidos mais detalhadamente.
 
-## Justificativa
-
+## 2. Justificativa
 Este projeto busca resolver uma problemática que muitas vezes não é vista pelo grande público, a falta de acesso à outras áreas de conhecimento na realização de um projeto institucional. Sem uma visão ampla das possibilidades, o docente limita-se ao escopo que lhe é mostrado e nunca é desafiado com novas e inesperadas experiências. A integração destes viria de maneira natural caso tal facilidade fosse lhes apresentada.
 
-## Público Alvo
+## 3. Fundamentação Teórica
+Não foi encontrada nenhuma ferramenta de gerenciamento de pesquisadores e grupos científicos como a proposta. No caso desta ferramenta, o que se destaca é a possibilidade de poder buscar alguém por sua área de estudo, a plataforma Lattes possui um sistema de busca de currículos por nome, mas não é muito intuitivo quando se procura alguma pessoa específica de uma área. Mas apesar disso, essa ferramenta não visa menosprezar o Lattes, e sim buscar uma forma de facilitar o trabalho de pessoas que tem algum projeto em mente, e busquem pessoas específicas.
+
+## 4. Objetivo Geral
+Construir um sistema que simplifique a integração entre discentes e/ou docentes de diferentes áreas do conhecimento em um projeto de pesquisa.
+
+## 5. Objetivos específicos
+* Desenvolver um sistema onde todos no instituto tenham acesso aos projetos cadastrados no sistema, sejam eles de sua área ou não.
+* Aplicar sistema de notificação por interesse onde um usuário recebe propostas de projetos que lhe cabem.
+* Disseminar e incentivar a idéia de projetos integrados.
+
+## 6. Metodologia da Execução do Projeto
+Será utilizada a metodologia ágil, mais especificadamente o Scrum. Pois um projeto simples como esse poderá e irá demandar novas funcionalidades a medida em que ele é desenvolvido. Além de ser adequado para uma equipe pequena.
+Pretende-se a início focar no desenvolvimento da camada do servidor e em seguida focar em deixar a ferramenta visualmente atrativa.
+
+## 7. Acompanhamento e Avaliação do Projeto Durante a Execução
+O orientador deverá observar os resultados do desenvolvimento do projeto a cada 2 semanas até que o mesmo se finalize. O orientador também deverá destacar os pontos bons e ruins do projeto para que a consistência do mesmo seja mantida, e que ele seja finalizado nas condições esperadas.
+
+## 8. Resultados Esperados e Disseminação dos Resultados
+Espera-se que uma ferramenta que possa atender aos objetivos gerais e específicos seja disponibilizada online. E disseminado através da utilização dos docentes e discentes em seus determinados projetos
+
+## 9. Público Alvo
 * Corpo docente
 * Corpo discente
 
-## Objetivo Geral
-Construir um sistema que simplifique a integração entre discentes e/ou docentes de diferentes áreas do conhecimento em um projeto de pesquisa.
-
-## Objetivos específicos
-* Desenvolver um sistema onde todos no instituto tenham acesso aos projetos cadastrados no sistema
-* Aplicar sistema de notificação por interesse onde um usuário recebe propostas de projetos que lhe cabem
-* Disseminar e incentivar a idéia de projetos integrados
-
-## Funcionalidades do Sistema
+## 10. Funcionalidades do Sistema
 | Nome | Atores | Descrição |
 | ------ | ------ | ------ |
 |Fazer login|Usuário|Esse caso de uso permite que o usuário entre no sistema|
@@ -40,7 +51,7 @@ Construir um sistema que simplifique a integração entre discentes e/ou docente
 |Negar Participação|Criador|O Criador de projeto nega que o usuário entre para o projeto|
 |Alocar cargos|Criador|O Criador de projetos pode alocar cargos para quem está abaixo dele na hierarquia do projeto|
 
-## Equipe
+## 11. Equipe
 
 | Nome | Github |
 | ------ | ------ |
@@ -50,10 +61,10 @@ Construir um sistema que simplifique a integração entre discentes e/ou docente
 | Luiz Araujo da Conceição Junior | https://github.com/Lacj2000 |
 | Phelyppe Matheus Silva Da Costa | https://github.com/PhePheMath |
 
-## Casos de Uso
+## 12. Casos de Uso
 ![alt text](documentation/UCiTeM.png)
 
-## Especificações dos casos de uso
+## 13. Especificações dos casos de uso
 | UC-01 | Fazer Login |
 | ------ | ------ |
 |Ator Principal|Usuário|
