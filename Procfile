@@ -1,0 +1,1 @@
+web: gunicorn ITeamManager.wsgi --log-file -

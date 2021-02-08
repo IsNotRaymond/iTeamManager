@@ -1,0 +1,11 @@
+<div class="nav-scroller bg-white shadow-sm">
+  <nav class="nav nav-underline">
+    <a class="nav-link {% if current == 'projetos' or current == 'projetos-andamento' or current == 'projetos-encerrado' %}active{% else %}{% endif %}" href="{% if current == 'projetos' %}#{% else %}{% url 'projetos' %}{% endif %}">Meus Projetos</a>
+    <a class="nav-link {% if current == 'notifications' %}active{% else %}{% endif %}" href="{% if current == 'notifications' %}#{% else %}{% url 'notifications' %}{% endif %}">Notificações
+      {% if qtd_notifications %}<span class="badge badge-pill bg-light align-text-bottom">{{ qtd_notifications }}</span>{% endif %}
+    </a>
+    <a class="nav-link {% if current == 'explore' %}active{% else %}{% endif %}" href="{% if current == 'explore' %}#{% else %}{% url 'explore' %}{% endif %}">Explorar Projetos</a>
+    <a class="nav-link {% if current == 'suggestions' %}active{% else %}{% endif %}" href="{% if current == 'suggestions' %}#{% else %}{% url 'suggestions' %}{% endif %}">Sugestões</a>
+    <a class="nav-link {% if current == 'users' %}active{% else %}{% endif %}" href="{% if current == 'users' %}#{% else %}{% url 'users' %}{% endif %}">Explorar Pesquisadores</a>
+  </nav>
+</div>

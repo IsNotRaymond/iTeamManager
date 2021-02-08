@@ -1,0 +1,29 @@
+                {% if error %}
+                    <div class="row mt-2">
+                        <div class="col-md-8 offset-md-2">
+                           <div class="alert alert-danger text-center">
+                                {{ error }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            
+                {% if warning %}
+                    <div class="row mt-2">
+                        <div class="col-md-8 offset-md-2">
+                           <div class="alert alert-warning text-center">
+                                {{ warning }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            
+                {% if success %}
+                    <div class="row mt-2">
+                        <div class="col-md-8 offset-md-2">
+                           <div class="alert alert-success text-center">
+                                {{ success }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}

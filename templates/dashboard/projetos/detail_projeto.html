@@ -1,0 +1,290 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% block title %}Ver Projeto{% endblock %}
+
+{% block style %}
+        <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/offcanvas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            {% include 'dashboard/alerts.html' %}
+
+            {% if not_exists %}
+            {% else %}
+                <div class="d-flex justify-content-between">
+                    <h4 class=""><strong>Nome do Projeto:</strong> {{ project.nome }}</h4>
+                    {% if user.id == criador.id or user.id == administrador.id and not project.encerrado %}
+                        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalInvite-1">Convidar Pessoas</a>
+                        <div class="modal fade" id="modalInvite-1" tabindex="-1" role="dialog" aria-labelledby="inviteLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="deleteLabel">Convidar Pessoas</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                            <div class="modal-body">
+                            Digite o Email, Usuário ou o Hash do perfil
+                          </div>
+                          <div class="modal-footer">
+                              <form id="convidar" method="POST" action="{% url 'convidar' project.share_hash %}">
+                                  {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="id_convites">Usuários</label>
+                                      <select id="id_convites" name="convites" aria-describedby="convites" class="form-control select2" multiple="multiple">
+                                      </select>
+                                        <small id="id_convites" class="text-muted">Você será notificado quando elas aceitarem ou recusarem</small>
+                                  </div>
+                              </form>
+                              <a class="btn btn-primary" onclick="document.getElementById('convidar').submit();" href="#">Convidar</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if visitant %}
+                    <p class="mt-2"><strong>Código de compartilhamento:</strong> Não disponível<p></p>
+                {% else %}
+                    <p class="mt-2">
+                        {% if project.encerrado %}
+                            <strong>Código de compartilhamento:</strong> Projeto encerrado
+                        {% else %}
+                            {% if criador.id == user.id or administrador.id == user.id %}
+                                <strong>Código de compartilhamento:</strong> {{ project.share_hash }}
+                            {% else %}
+                                <strong>Código de compartilhamento:</strong> Você não tem permissão para ver isso
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                <p class="mt-2">
+                    <strong>Descrição do Projeto:</strong> {{ project.descricao }}
+                </p>
+
+                {% if not visitant %}
+                    <p class="mt-2"><strong>Participantes: </strong></p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Cargo</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for participante in participantes %}
+                                {% if participante.id == user.id %}
+                                    <tr>
+                                        <th scope="row"><a href="{% url 'perfil' participante.profile.url_hash %}">Eu</a></th>
+                                        <td>{% if participante == project.criador %}
+                                                    <em>CRIADOR</em>
+                                                {% else %}
+                                                    {% if participante == project.administrador %}
+                                                        <em>ADMINISTRADOR</em>
+                                                    {% else %}
+                                                        {% if participante == project.moderador %}
+                                                            <em>MODERADOR</em>
+                                                        {% else %}
+                                                            <em>NENHUM</em>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <th scope="row"><a href="{% url 'perfil' participante.profile.url_hash %}" target="_blank">{{ participante.first_name }} {{ participante.last_name }}</a></th>
+                                        <td>
+                                        {% if user.id == project.criador.id %}
+                                            <div class="form-inline my-2 my-lg-0">
+                                                {% if participante == project.criador %}
+                                                    <em>CRIADOR</em>
+                                                {% else %}
+                                                    {% if participante == project.administrador %}
+                                                        <em>ADMINISTRADOR</em>
+                                                    {% else %}
+                                                        {% if participante == project.moderador %}
+                                                            <em>MODERADOR</em>
+                                                        {% else %}
+                                                            <em>NENHUM</em>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                                    {% if participante.id == project.administrador.id %}
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'rebaixar-cargo' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-danger" aria-describedby="rebaixar">&darr;</button>
+                                                        </form>
+                                                    {% endif %}
+                                                    {% if participante.id == project.moderador.id %}
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'aumentar-cargo' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-success" aria-describedby="aumentar">&uarr;</button>
+                                                        </form>
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'rebaixar-cargo' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-danger" aria-describedby="rebaixar">&darr;</button>
+                                                        </form>
+                                                    {% endif %}
+                                                    {% if participante.id != project.moderador.id and participante.id != project.administrador.id %}
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'aumentar-cargo' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-success" aria-describedby="aumentar">&uarr;</button>
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                        {% else %}
+                                            {% if participante == project.criador %}
+                                                <em>CRIADOR</em>
+                                            {% else %}
+                                                {% if participante == project.administrador %}
+                                                    <em>ADMINISTRADOR</em>
+                                                {% else %}
+                                                    {% if participante == project.moderador %}
+                                                        <em>MODERADOR</em>{% else %}
+                                                        <em>NENHUM</em>{% endif %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.id == criador.id %}
+                                                <div class="form-inline my-2 my-lg-0">
+                                                    {% if participante.id not in gratificados %}
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'gratificacao' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-success" aria-describedby="gratificacao">&check;</button>
+                                                        </form>
+                                                    {% endif %}
+                                                    {% if participante.id not in advertidos %}
+                                                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'advertencia' project.share_hash participante.profile.url_hash %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-warning" aria-describedby="advertencia">&excl;</button>
+                                                        </form>
+                                                    {% endif %}
+                                                    <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'banir' project.share_hash participante.profile.url_hash %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-danger" aria-describedby="expulsar">&times;</button>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if user.id == administrador.id and participante.id != criador.id %}
+                                                <div class="form-inline my-2 my-lg-0">
+                                                    <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'advertencia' project.share_hash participante.profile.url_hash %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-warning" aria-describedby="advertencia">&excl;</button>
+                                                    </form>
+                                                    <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'banir' project.share_hash participante.profile.url_hash %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-danger" aria-describedby="expulsar">&times;</button>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if user.id == moderador.id and participante.id != criador.id and participante.id != administrador.id %}
+                                                <div class="form-inline my-2 my-lg-0">
+                                                    <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'advertencia' project.share_hash participante.profile.url_hash %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-warning" aria-describedby="advertencia">&excl;</button>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+
+                <p class="mt-2"><strong>Categorias: </strong></p>
+                <ul class="list-group list-group-flush">
+                    {% for cat in project.categoria.all %}
+                        <li class="list-group-item">{{ cat.nome }}</li>
+                    {% endfor %}
+                </ul>
+
+                {% if visitant and solicitar %}
+                    <div class="text-center">
+                        <form method="POST" action="{% url 'solicitar-participacao' project.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Solicitar participação</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if user.id == criador.id and not project.encerrado %}
+                <div class="text-center">
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete-1">Encerrar Projeto</a>
+                </div>
+                <div class="modal fade" id="modalDelete-1" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteLabel">Encerrar Projeto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Tem certeza que deseja encerrar este projeto? Esta ação é irreversível
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                          <a href="#" type="button" class="btn btn-danger" onclick="document.getElementById('delete_project').submit();">Sim</a>
+                          <form id="delete_project" method="POST" action="{% url 'encerrar-projeto' project.share_hash user.profile.secret_hash %}">
+                              {% csrf_token %}
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/offcanvas.js' %}"></script>
+    <script src="{% static 'js/select2.min.js' %}"></script>
+    <script src="{% static 'js/select2bootstrap.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'Usuários',
+                theme: 'bootstrap4',
+                tags: true
+                }
+            );
+        });
+
+    </script>
+{% endblock %}

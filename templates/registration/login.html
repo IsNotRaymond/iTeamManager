@@ -1,0 +1,80 @@
+{% extends 'form_base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <body>
+        <form class="form-general" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="text-center mb-4">
+                <h1 class="h3 mb-3 font-weight-normal">ITeamManager - Login</h1>
+                <p>Use o Usuário e Senha que você usou na etapa de criação de contas</p>
+            </div>
+
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong>{{ error|escape }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <strong>{{ error|escape }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags %}
+                        {% if message.tags == 'error' %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                {{ message|escape }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message|escape }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-label-group">
+                <input type="text" id="id_username" name="username" value="{% if form.username.value %}{{ form.username.value }}{% else %}{% endif %}" class="form-control" placeholder="Usuário" required autofocus>
+                <label for="id_username">Usuário</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="password" id="id_password" name="password" class="form-control" placeholder="Senha" required>
+                <label for="id_password">Senha</label>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+
+            <div class="text-center mt-2">
+                <a class="small" href="{% url 'password_reset' %}">Esqueceu sua senha?</a>
+            </div>
+
+            <div class="text-center mt-1">
+                <a class="small" href="{% url 'signup' %}">Não tem uma conta? Crie aqui</a>
+            </div>
+
+            <p class="mt-5 mb-3 text-muted text-center">&copy; ITeamManager 2021</p>
+        </form>
+    </body>
+{% endblock %}
+

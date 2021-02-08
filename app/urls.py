@@ -1,0 +1,127 @@
+from django.contrib.auth.decorators import login_required
+from django.urls import path
+from .views import (MeusProjetosView, ProjetoDetailView,
+                    ConquistaView, ExploreView, ProjetosAndamentoView,
+                    SuggestionsView, CriarProjetoView, EncerrarProjetoView,
+                    MeuPerfilView, PerfilView, ProjetosEncerradoView,
+                    PesquisadoresView, SolicitarParticipacaoView,
+                    NotificacaoView, AceitarParticipacaoView,
+                    RecusarParticipacaoView, VisualizarAceitacaoView,
+                    VisualizarRecusacaoView, AdvertenciaView, GrafificarView,
+                    BanirView, VisualizarAdvertenciaView, VisualizarGratificacaoView,
+                    VisualizarBanimentoView, ConvidarView, EntrarPorLinkView,
+                    AceitarConviteView, RecusarConviteView, AumentarCargoView, RebaixarCargoView,
+                    ConvidarUsuarioView, HelpView)
+
+urlpatterns = [
+    path('dashboard/projetos/', login_required(MeusProjetosView.as_view(), login_url='login'),
+         name='projetos'),
+    path('dashboard/projetos-andamento/', login_required(ProjetosAndamentoView.as_view(), login_url='login'),
+         name='projetos-andamento'),
+    path('dashboard/projetos-encerrado/', login_required(ProjetosEncerradoView.as_view(), login_url='login'),
+         name='projetos-encerrado'),
+    path('dashboard/meu-perfil/', login_required(MeuPerfilView.as_view(), login_url='login'),
+         name='meu-perfil'),
+    path('dashboard/perfil/<str:profile_hash>', login_required(PerfilView.as_view(), login_url='login'),
+         name='perfil'),
+
+    # PROJETOS
+    path('dashboard/projetos/<str:url_hash>', login_required(ProjetoDetailView.as_view(), login_url='login'),
+         name='projeto-detail'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:secret_hash>/encerrar', login_required(EncerrarProjetoView.as_view(),
+                                                                                          login_url='login'),
+         name='encerrar-projeto'),
+
+    path('dashboard/projetos/#/compartilhamento/aceitar-por-share',
+         login_required(EntrarPorLinkView.as_view(),
+                        login_url='login'),
+         name='entrar-por-link'),
+
+    path('dashboard/projetos/<str:user_hash>/convidar/convidar-usuario', login_required(ConvidarUsuarioView.as_view(),
+                                                                                        login_url='login'),
+         name='convidar-usuario'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/aceitar',
+         login_required(AceitarParticipacaoView.as_view(),
+                        login_url='login'),
+         name='aceitar-participacao'),
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/recusar',
+         login_required(RecusarParticipacaoView.as_view(),
+                        login_url='login'),
+         name='recusar-participacao'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/aceitar-convite',
+         login_required(AceitarConviteView.as_view(),
+                        login_url='login'),
+         name='aceitar-convite'),
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/recusar-convite',
+         login_required(RecusarConviteView.as_view(),
+                        login_url='login'),
+         name='recusar-convite'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/aumentar-cargo',
+         login_required(AumentarCargoView.as_view(),
+                        login_url='login'),
+         name='aumentar-cargo'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/rebaixar-cargo',
+         login_required(RebaixarCargoView.as_view(),
+                        login_url='login'),
+         name='rebaixar-cargo'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/advertencia', login_required(AdvertenciaView.as_view(),
+                                                                                           login_url='login'),
+         name='advertencia'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/gratificacao', login_required(GrafificarView.as_view(),
+                                                                                            login_url='login'),
+         name='gratificacao'),
+
+    path('dashboard/projetos/<str:share_hash>/<str:user_hash>/banir', login_required(BanirView.as_view(),
+                                                                                     login_url='login'),
+         name='banir'),
+
+    path('dashboard/projetos/<str:url_hash>/solicitar/projeto', login_required(SolicitarParticipacaoView.as_view(),
+                                                                               login_url='login'),
+         name='solicitar-participacao'),
+
+    path('dashboard/projetos/<str:share_hash>/convidar/projeto', login_required(ConvidarView.as_view(),
+                                                                                login_url='login'),
+         name='convidar'),
+
+    path('dashboard/conquistas/', login_required(ConquistaView.as_view(), login_url='login'),
+         name='conquistas'),
+    path('dashboard/explore/', login_required(ExploreView.as_view(), login_url='login'),
+         name='explore'),
+    path('dashboard/sugestoes/', login_required(SuggestionsView.as_view(), login_url='login'),
+         name='suggestions'),
+    path('dashboard/pesquisadores/', login_required(PesquisadoresView.as_view(), login_url='login'),
+         name='users'),
+    path('dashboard/help/', login_required(HelpView.as_view(), login_url='login'),
+         name='help'),
+
+    # NOTIFICACOES
+    path('dashboard/notificacoes/', login_required(NotificacaoView.as_view(), login_url='login'),
+         name='notifications'),
+    path('dashboard/notificacoes/visualizar-aceitacao/<str:url_hash>', login_required(VisualizarAceitacaoView.as_view(),
+                                                                                      login_url='login'),
+         name='visualizar-aceitacao'),
+    path('dashboard/notificacoes/visualizar-recusacao/<str:url_hash>', login_required(VisualizarRecusacaoView.as_view(),
+                                                                                      login_url='login'),
+         name='visualizar-recusacao'),
+    path('dashboard/notificacoes/visualizar-advertencia/<str:url_hash>',
+         login_required(VisualizarAdvertenciaView.as_view(),
+                        login_url='login'),
+         name='visualizar-advertencia'),
+    path('dashboard/notificacoes/visualizar-gratificacao/<str:url_hash>',
+         login_required(VisualizarGratificacaoView.as_view(),
+                        login_url='login'),
+         name='visualizar-gratificacao'),
+    path('dashboard/notificacoes/visualizar-banimento/<str:url_hash>', login_required(VisualizarBanimentoView.as_view(),
+                                                                                      login_url='login'),
+         name='visualizar-banimento'),
+
+    path('dashboard/criar-projeto/', login_required(CriarProjetoView.as_view(), login_url='login'),
+         name='criar-projeto'),
+]

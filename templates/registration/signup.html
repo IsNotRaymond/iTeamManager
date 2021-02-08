@@ -1,0 +1,96 @@
+{% extends 'form_base.html' %}
+
+{% block title %}Cadastrar{% endblock title %}
+
+{% block content %}
+    <body>
+        <form class="form-general" method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <div class="text-center mb-4">
+                <h1 class="h3 mb-3 font-weight-normal">ITeamManager Cadastro</h1>
+                <p>Aqui você pode criar sua conta</p>
+            </div>
+
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong>{{ error|escape }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <strong>{{ error|escape }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags %}
+                        {% if message.tags == 'error' %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                {{ message|escape }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message|escape }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-label-group">
+                <input type="text" name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% else %}{% endif %}" class="form-control" id="id_first_name" placeholder="Nome" required>
+                <label for="id_first_name">Nome</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="text" name="last_name" value="{% if form.first_name.value %}{{ form.last_name.value }}{% else %}{% endif %}" class="form-control mb-2 mr-sm-2" id="id_last_name" placeholder="Sobrenome" required>
+                <label for="id_last_name">Sobrenome</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="text" id="id_username" name="username" value="{% if form.username.value %}{{ form.username.value }}{% else %}{% endif %}" class="form-control" placeholder="Usuário" required>
+                <label for="id_username">Usuário</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="email" id="id_email" name="email" value="{% if form.email.value %}{{ form.email.value }}{% else %}{% endif %}" class="form-control" placeholder="Email" required>
+                <label for="id_email">Email</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="password" id="id_password1" name="password1" class="form-control" placeholder="Senha" required>
+                <label for="id_password1">Senha</label>
+            </div>
+
+            <div class="form-label-group">
+                <input type="password" id="id_password2" name="password2" class="form-control" placeholder="Repita a senha" required>
+                <label for="id_password2">Repita a senha</label>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+
+            <div class="text-center mt-1">
+                <a class="small" href="{% url 'login' %}">Já tem uma conta? Faça o login</a>
+            </div>
+
+            <p class="mt-5 mb-3 text-muted text-center">&copy; ITeamManager 2021</p>
+        </form>
+    </body>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'dashboard/dashboard.html' %}
+{% block title %}Notificações{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            {% include 'dashboard/alerts.html' %}
+
+            <h6 class="border-bottom border-gray pb-2 mb-0">Notificações</h6>
+
+            {% if qtd_notifications == 0 %}
+                <div class="media text-muted pt-3">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">Tudo limpo!</p>
+                </div>
+            {% else %}
+                {% for projeto in projetos_aceitar %}
+                    {% for participante in projeto.pendentes.all %}
+                        <div class="media text-muted pt-3">
+                            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                {{ participante.first_name }} {{ participante.last_name }} solicitou a entrada em {{ projeto.nome }}.
+                                Deseja aceitar?
+                            </p>
+                            <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'recusar-participacao' projeto.share_hash participante.profile.url_hash %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">&times;</button>
+                            </form>
+
+                            <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'aceitar-participacao' projeto.share_hash participante.profile.url_hash %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success">&check;</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% for projeto in projetos_aceitos %}
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Legal! Você foi aceito no projeto {{ projeto.projeto.nome }}
+                        </p>
+                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'visualizar-aceitacao' projeto.projeto.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-primary">&check;</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                {% for projeto in projetos_recusados %}
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Que triste! Você não foi aceito no projeto {{ projeto.projeto.nome }} :(
+                        </p>
+                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'visualizar-recusacao' projeto.projeto.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-primary">&check;</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                {% for projeto in projetos_banidos %}
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Péssimo! Você foi banido do projeto {{ projeto.projeto.nome }} :(
+                        </p>
+                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'visualizar-banimento' projeto.projeto.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">&check;</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                {% for projeto in projetos_advertidos %}
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Cuidado! Você foi advertido no projeto {{ projeto.projeto.nome }}
+                        </p>
+                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'visualizar-advertencia' projeto.projeto.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-warning">&check;</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                {% for projeto in projetos_gratificados %}
+                    <div class="media text-muted pt-3">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Parabéns!! Você foi gratificado no projeto {{ projeto.projeto.nome }}
+                        </p>
+                        <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'visualizar-gratificacao' projeto.projeto.url_hash %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">&check;</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                {% for projeto in projetos_convidados %}
+                    <div class="media text-muted pt-3">
+                            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                Você recebeu um convite para participar do projeto <a href="{% url 'projeto-detail' projeto.projeto.url_hash %}" target="_blank">{{ projeto.projeto.nome }}</a>.
+                                Deseja aceitar?
+                            </p>
+                            <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'recusar-convite' projeto.projeto.share_hash user.profile.url_hash %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">&times;</button>
+                            </form>
+
+                            <form class="ml-sm-2 my-2 my-sm-0" method="POST" action="{% url 'aceitar-convite' projeto.projeto.share_hash user.profile.url_hash %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success">&check;</button>
+                            </form>
+                        </div>
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+    </main>
+{% endblock %}

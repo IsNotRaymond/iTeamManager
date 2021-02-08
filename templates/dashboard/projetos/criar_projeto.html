@@ -1,0 +1,93 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% block title %}Criar Projetos{% endblock %}
+
+{% block style %}
+        <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/offcanvas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <form method="POST" action="{% url 'criar-projeto' %}">
+                {% csrf_token %}
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">ITeamManager - Criar Projetos</h1>
+                    <p>Aqui você pode criar seu próprio projeto</p>
+                </div>
+
+                {% include 'dashboard/alerts.html' %}
+
+                <div class="form-group">
+                    <label for="id_name">Nome do Projeto</label>
+                    <input required aria-describedby="nome_projeto" type="text" name="nome" class="form-control" id="id_name" value="{% if nome %}{{ nome }}{% endif %}" placeholder="Nome do projeto">
+                    <small id="descricao_projeto" class="text-muted">O nome é uma das partes mais importantes do projeto</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_desc">Descrição do Projeto</label>
+                    <textarea required aria-describedby="descricao_projeto" name="descricao" class="form-control" id="id_desc" rows="4" placeholder="Descrição do projeto">{% if descricao %}{{ descricao }}{% endif %}</textarea>
+                    <small id="descricao_projeto" class="text-muted">Adicione uma descrição interessante para que as pessoas possam ver do que se trata o projeto</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="id_categorias">Categorias do Projeto</label>
+                  <select id="id_categorias" name="categorias" aria-describedby="categorias" class="form-control select2" multiple="multiple">
+                      {% for cat in categorias %}
+                          <option>{{ cat.nome }}</option>
+                      {% endfor %}
+                  </select>
+                    <small id="categorias" class="text-muted">Adicione quantas categorias você achar necessário, seu projeto poderá ser mostrado publicamente na pesquisa</small>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" name="privado" type="checkbox" value="privado" id="id_privado" {% if privado %}checked{% endif %}>
+                    <label class="form-check-label" for="id_privado" aria-describedby="privado">
+                        Projeto Privado?
+                    </label>
+                    <small id="privado" class="text-muted">Se o projeto for privado, apenas usuários que você convidar poderão entrar</small>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 offset-md-5">
+                        <button class="btn btn-primary mt-5 btn-block" type="submit">Criar</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/offcanvas.js' %}"></script>
+    <script src="{% static 'js/select2.min.js' %}"></script>
+    <script src="{% static 'js/select2bootstrap.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'Categorias',
+                theme: 'bootstrap4',
+                tags: true
+                }
+            );
+        });
+
+    </script>
+{% endblock %}

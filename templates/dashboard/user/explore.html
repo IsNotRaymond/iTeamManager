@@ -1,0 +1,171 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load my_tags %}
+{% block title %}Explorar Pesquisadores{% endblock %}
+
+
+{% block main %}
+    <main role="main" class="container">
+
+        {% include 'dashboard/alerts.html' %}
+        <div class="text-center">
+            <form class="form mt-2" method="GET">
+                <div class="row">
+                    <div class="col-md-4 offset-md-4">
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" class="form-control" name="categorias" multiple="multiple" size="3">
+                            {% for item in categorias %}
+                                <option value="{{ item.id }}">{{ item.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary mt-3" type="submit">Filtrar</button>
+            </form>
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0">{{ name }}</h6>
+
+            {% for user in all_users %}
+                <div class="media text-muted pt-3">
+                    <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#000000"/><text x="50%" y="50%" fill="#000000" dy=".3em">32x32</text></svg>
+
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark"><a href="{% url 'perfil' user.profile.url_hash %}" target="_blank">{{ user.first_name }} {{ user.last_name }}</a></strong>
+                        {{ user.profile.descricao }}
+                    </p>
+
+                    <a href="#" data-toggle="modal" data-target="#modal-convidar-user{{ user.profile.url_hash }}" class="btn btn-sm btn-primary">Convidar</a>
+                    <div class="modal fade" id="modal-convidar-user{{ user.profile.url_hash }}" tabindex="-1" role="dialog" aria-labelledby="inviteLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteLabel">Convidar usuário</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Selecione o projeto que você deseja convidar
+                                </div>
+                                <div class="modal-footer">
+                                    {% if projetos %}
+                                        <form id="convidar-usuario" method="POST" action="{% url 'convidar-usuario' user.profile.url_hash %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="id_projetos">Projetos</label>
+                                                <select id="id_projetos" name="projeto" aria-describedby="projetos" class="form-control">
+                                                    {% for item in projetos %}
+                                                        <option value="{{ item.url_hash }}">{{ item.nome }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <small id="id_projetos" class="text-muted">Você só pode convidar um usuário por vez por projeto</small>
+                                            </div>
+                                        </form>
+                                        <a class="btn btn-primary" onclick="document.getElementById('convidar-usuario').submit();" href="#">Convidar</a>
+                                    {% else %}
+                                        Nenhum projeto encontrado
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    {{ empty }}
+                </p>
+                </div>
+            {% endfor %}
+
+            {% if is_paginated %}
+                <nav aria-label="Pagination Grupos">
+                  <ul class="pagination justify-content-center flex-wrap">
+                    {% if page_obj.number == 1 %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Primeira">
+                                <span aria-hidden="true">&larrb;</span>
+                                <span class="sr-only">Primeira</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="?{% param_replace page=1 %}" aria-label="Primeira">
+                              <span aria-hidden="true">&larrb;</span>
+                              <span class="sr-only">Primeira</span>
+                          </a>
+                        </li>
+                    {% endif %}
+
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                          <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number %}" aria-label="Anterior">
+                              <span aria-hidden="true">&laquo;</span>
+                              <span class="sr-only">Anterior</span>
+                          </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in paginator|proper_paginate:page_obj.number %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="#">
+                                    <span>{{ i }}</span>
+                                    <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a class="page-link" href="?{% param_replace page=i %}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                          <a class="page-link" href="?{% param_replace page=page_obj.next_page_number %}" aria-label="Próxima">
+                              <span aria-hidden="true">&raquo;</span>
+                              <span class="sr-only">Próxima</span>
+                          </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Próxima">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Próxima</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if page_obj.number == paginator.num_pages %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Última">
+                                <span aria-hidden="true">&rarrb;</span>
+                                <span class="sr-only">Última</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="?{% param_replace page=paginator.num_pages %}" aria-label="Última">
+                              <span aria-hidden="true">&rarrb;</span>
+                              <span class="sr-only">Última</span>
+                          </a>
+                        </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

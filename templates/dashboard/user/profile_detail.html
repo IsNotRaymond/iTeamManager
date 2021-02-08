@@ -1,0 +1,72 @@
+{% extends 'dashboard/dashboard.html' %}
+{% block title %}Meus Projetos{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            {% if not_exists %}
+                <div class="alert alert-danger">
+                    Este perfil não existe!
+                </div>
+            {% else %}
+                <div class="text-center">
+                    <div class="mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+                    </div>
+                    <hr>
+                    <p class="mt-2"><strong>Descrição: </strong><div class="text-muted">{{ profile.descricao }}</div></p>
+                    <p class="mt-2"><strong>Interesses: </strong></p>
+                    <div class="d-flex">
+                        <ul class="list-inline mx-auto justify-content-center">
+                            {% for int in profile.interesses.all %}
+                                <li class="list-inline-item text-muted">{{ int.nome }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <p class="mt-2" aria-describedby="gratificacao">Gratificações: {{ profile.gratificado }}</p>
+                    <small id="gratificacao" class="text-muted">Quantidade de vezes que este usuário foi gratificado</small>
+                    <p class="mt-2" aria-describedby="advertencia">Avertências: {{ profile.advertencias }}</p>
+                    <small id="advertencia" class="text-muted">Quantidade de vezes que este usuário foi advertido</small>
+                    <p class="mt-2" aria-describedby="advertencia">Avertências: {{ profile.banido }}</p>
+                    <small id="advertencia" class="text-muted">Quantidade de vezes que este usuário foi banido</small>
+                </div>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="#" data-toggle="modal" data-target="#modal-convidar-user{{ user.profile.url_hash }}" class="btn btn btn-primary mt-4 text-center">Convidar</a>
+                        <div class="modal fade" id="modal-convidar-user{{ user.profile.url_hash }}" tabindex="-1" role="dialog" aria-labelledby="inviteLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteLabel">Convidar usuário</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Selecione o projeto que você deseja convidar
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form id="convidar-usuario" method="POST" action="{% url 'convidar-usuario' user.profile.url_hash %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="id_projetos">Projetos</label>
+                                                <select id="id_projetos" name="projeto" aria-describedby="projetos" class="form-control">
+                                                    {% for item in projetos %}
+                                                        <option value="{{ item.url_hash }}">{{ item.nome }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <small id="id_projetos" class="text-muted">Você só pode convidar um usuário por vez por projeto</small>
+                                            </div>
+                                        </form>
+                                        <a class="btn btn-primary" onclick="document.getElementById('convidar-usuario').submit();" href="#">Convidar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

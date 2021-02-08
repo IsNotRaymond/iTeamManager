@@ -1,0 +1,98 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% block title %}{{ user.first_name }}{% endblock %}
+
+{% block style %}
+        <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/offcanvas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2-bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <form method="POST" action="{% url 'meu-perfil' %}">
+                {% csrf_token %}
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">ITeamManager - Perfil</h1>
+                    <p>Aqui você pode ver e editar informações a respeito do seu perfil</p>
+                    <p class="text-muted">Minhas Gratificações: {{ user.profile.gratificado }}</p>
+                    <p class="text-muted">Projetos em que fui advertido: {{ user.profile.advertencias }}</p>
+                    <p class="text-muted">Projetos em que fui banido: {{ user.profile.banido }}</p>
+                    <p class="text-muted">Link de convite: {{ user.profile.url_hash }}</p>
+                </div>
+
+                {% include 'dashboard/alerts.html' %}
+
+                <div class="form-group">
+                    <label for="id_desc">Minha descrição</label>
+                    <textarea aria-describedby="descricao_profile" name="descricao" class="form-control" id="id_desc" rows="4" placeholder="Minha descrição">{% if user.profile.descricao %}{{ user.profile.descricao }}{% endif %}</textarea>
+                    <small id="descricao_profile" class="text-muted">Adicione uma descrição interessante para que as pessoas possam ver sobre o que você gosta</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="id_interesses">Meus interesses</label>
+                  <select id="id_interesses" name="interesses" aria-describedby="interesses_profile" class="form-control select2" multiple="multiple">
+                      {% for cat in categorias %}
+                          <option
+                          {% for int in user.profile.interesses.all %}
+                              {% if cat.id == int.id %}
+                              selected="selected"
+                              {% endif %}
+                          {% endfor %}>
+                          {{ cat.nome }}</option>
+                      {% endfor %}
+                  </select>
+                    <small id="interesses_profile" class="text-muted">Você pode adicionar quantas categorias de interesse você preferir</small>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" name="privado" type="checkbox" value="privado" id="id_privado" {% if not user.profile.mostrar_perfil %}checked{% endif %}>
+                    <label class="form-check-label" for="id_privado" aria-describedby="privado">
+                        Esconder meu perfil?
+                    </label>
+                    <small id="privado" class="text-muted">Você não será mostrado na exploração, mas ainda poderá ser convidado por outros usuários</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 offset-md-5">
+                        <button class="btn btn-primary mt-5 btn-block" type="submit">Salvar</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/offcanvas.js' %}"></script>
+    <script src="{% static 'js/select2.min.js' %}"></script>
+    <script src="{% static 'js/select2bootstrap.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                placeholder: 'Categorias',
+                theme: 'bootstrap4',
+                tags: true
+                }
+            );
+        });
+
+    </script>
+{% endblock %}

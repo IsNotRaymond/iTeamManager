@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block style %}
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/offcanvas.css' %}">
+{% endblock %}
+{% block content %}
+    <body class="bg-light">
+        {% include 'dashboard/navbar.html' %}
+        {% include 'dashboard/navscroller.html' %}
+
+        <div class="modal fade" id="modal-entrar-por-link-1" tabindex="-1" role="dialog" aria-labelledby="inviteLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteLabel">Entrar por link de compartilhamento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Digite o Link de compartilhamento abaixo
+                    </div>
+                    <div class="modal-footer">
+                        <form class="form-inline my-2 my-lg-0" id="entrar" method="POST" action="{% url 'entrar-por-link' %}">
+                            {% csrf_token %}
+                            <label for="id_link">Link de compartilhamento</label>
+                            <input class="form-control" type="text" id="id_link" name="share_hash" required placeholder="Link">
+                        </form>
+                        <a class="btn btn-primary" onclick="document.getElementById('entrar').submit();" href="#">Entrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block main %}
+        {% endblock %}
+    </body>
+{% endblock %}
+{% block script %}<script src="{% static 'js/offcanvas.js' %}"></script>{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'dashboard/dashboard.html' %}
+{% block title %}Ajuda{% endblock %}
+
+{% block main %}
+    <main role="main" class="container">
+
+        {% include 'dashboard/alerts.html' %}
+
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0">Projetos em andamento</h6>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">Como eu crio um projeto?</strong>
+                    Simples! Clique neste <a href="{% url 'criar-projeto' %}">link</a> e preencha o formulário!
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">Como eu convido novas pessoas para o meu projeto?</strong>
+                    Existem três formas:<br>
+                    - Na aba <a href="{% url 'users' %}">Explorar pesquisadores</a>. Clique no botão de convidar em algum pesquisador, em seguida selecione o projeto a qual você deseja convidar aquele pesquisador<br><br>
+                    - Na aba de visualizar o projeto. Clique no botão Convidar pessoas, digite o nome de usuario, email ou link de convite do usuário e selecione o botão convidar<br><br>
+                    - Na aba de visualizar o perfil. Clique no botão Convidar, selecione o projeto e clique em convidar<br>
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">Como eu entro em um projeto?</strong>
+                    Existem duas formas:<br>
+                    - Peça o link de compartilhamento do projeto com alguém, selecione o botão Entrar por link na barra de navegação superior e digite o link solicitado, com o link de compartilhamento você entra no projeto automaticamente<br><br>
+                    - Na aba de visualizar o projeto. Clique no botão Solicitar participação. Caso você seja aceito você receberá uma notificação<br>
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">O que são gratificações, advertências e banidos?</strong>
+                    É um sistema de classificação de pesquisadores, um pesquisador com várias advertências e banidos será mostrado no fim da lista, enquanto um pesquisador com várias gratificações será mostrado primeiro. Tudo depende do seu desempenho e engajamento no projeto! Faça por merecer
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">Como funcionam os cargos?</strong>
+                    Cada projeto possui apenas um criador, um administrador e um moderador (Muitas pessoas no controle vira desorganizado).<br>
+                    - Os moderadores podem apenas dar advertências nos demais pesquisadores<br><br>
+                    - Os administradores podem dar advertências em moderadores e demais pesquisadores, além de poder banir os mesmos. Também podem ver o link de compartilhamento do projeto, assim como pode convidar outros usuários<br><br>
+                    - Os criadores tem total acesso ao projeto, podendo subir ou rebaixar cargos, banir, gratificar ou dar advertências. Convites também inclusos, e por fim, eles são os únicos que podem encerrar um projeto!
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">O que são os Interesses (Categorias)?</strong>
+                    É a nossa forma de filtrar os projetos na aba de sugestões, além disso, você também pode filtrar os pesquisadores por categoria!
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">O que são as sugestões?</strong>
+                    São 3 projetos aleatórios que são mostrados de acordo com seus interesses.
+                    Logo você não verá nenhuma sugestão se não houver nenhum interesse no seu perfil
+                    Nota: Os projetos vão sempre atualizar aleatoriamente, então se você ver algum projeto interessante,
+                    solicite a participação pois ele pode demorar para aparecer novamente nas sugestões
+                </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">Por que 3 sugestões?</strong>
+                    Apesar do conhecimento, muitos projetos ao mesmo tempo pode ser tornar impossível de se organizar.
+                    Então acreditamos que 3 sugestões seja suficiente. Mas apesar desse detalhe, você pode participar de
+                    quantos projetos desejar!
+                </p>
+            </div>
+
+            <small class="d-block text-left mt-3">
+                Não encontrou sua dúvida? Fale com o suporte através do email iteammanager.suporte@gmail.com Ficaremos felizes em ajudar!
+            </small>
+        </div>
+    </main>
+{% endblock %}

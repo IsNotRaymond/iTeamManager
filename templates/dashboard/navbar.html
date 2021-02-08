@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <a class="navbar-brand mr-auto mr-lg-0" href="{% url 'projetos' %}">Dashboard - {{ user.first_name }}</a>
+    <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link  {% if current == 'profile' %}active{% endif %}" href="{% url 'meu-perfil' %}">Perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  {% if current == 'help' %}active{% endif %}" href="{% url 'help' %}">Ajuda</a>
+            </li>
+        </ul>
+
+        <div class="form-inline my-2 my-lg-0">
+            <a href="#" data-toggle="modal" data-target="#modal-entrar-por-link-1" class="btn btn-outline-success ml-sm-2 my-2 my-sm-0">Entrar por link</a>
+        </div>
+
+        <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'criar-projeto' %}" class="btn btn-outline-success ml-sm-2 my-2 my-sm-0">Novo Projeto</a>
+        </div>
+
+        <div class="form-inline my-2 my-lg-0">
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0">Logout</a>
+        </div>
+    </div>
+</nav>
